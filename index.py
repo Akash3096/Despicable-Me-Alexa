@@ -1,4 +1,4 @@
-import urllib2
+import requests
 import json
 
 API_BASE="http://despicableme.wikia.com/api/v1/Articles/AsSimpleJson?id="
@@ -76,8 +76,8 @@ def get_Character(intent):
         characterId = (character.lower())
         if (characterId != "unkn"):
             card_title = "Character " + character.title()
-            response = urllib2.urlopen(API_BASE + characterId)
-            jsonData = json.load(response)
+            response = requests.get(API_BASE + characterId)
+            jsonData = response.json()
             alexaresponse = jsonData["sections"][0]["content"][0]["text"]
 
             speech_output = "Description about" + character + " is as follows: " + alexaresponse
