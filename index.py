@@ -62,6 +62,34 @@ def get_welcome_response():
         card_title, speech_output, reprompt_text, should_end_session))
 
 
+def get_Character(intent):
+    session_attributes = {}
+    card_title = "Description"
+    speech_output = "I'm not sure what character you are specifying" \
+                    "Please try again."
+    reprompt_text = "I'm not sure which character you are specifying" \
+                    "Try asking about Agnes Gru for example."
+    should_end_session = False
+
+    if "Characters" in intent["slots"]:
+        character = intent["slots"]["Characters"]["value"]
+        characterId = (character.lower())
+        if (characterId != "unkn"):
+            card_title = "Character " + character.title()
+            response = urllib2.urlopen(API_BASE + characterId)
+            jsonData = json.load(response)
+            alexaresponse = jsonData["sections"][0]["content"][0]["text"]
+
+            speech_output = "Description about" + character + " is as follows: " + alexaresponse
+
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
+
+def get_character_id(character):
+    return {
+        "gru": "2033",
+    }.get(character, "unkn")
+
 def build_speechlet_response(title, output, reprompt_text, should_end_session):
     return {
         "outputSpeech": {
@@ -88,35 +116,5 @@ def build_response(session_attributes, speechlet_response):
         "sessionAttributes": session_attributes,
         "response": speechlet_response
     }
-
-
-def get_Character(intent):
-    session_attributes = {}
-    card_title = "Description"
-    speech_output = "I'm not sure what character you are specifying" \
-                    "Please try again."
-    reprompt_text = "I'm not sure which character you are specifying" \
-                    "Try asking about Agnes Gru for example."
-    should_end_session = False
-
-    if "Characters" in intent["slots"]:
-        character = intent["slots"]["Characters"]["value"]
-        characterId = (character.lower())
-        if (characterId != "unkn"):
-            card_title = "Character " + character.title()
-            response = urllib2.urlopen(API_BASE + characterId)
-            jsonData = json.load(response)
-            alexaresponse = jsonData["sections"][0]["content"][0]["text"]
-
-            speech_output = "Description about" + character + " is as follows: "
-            reprompt_text = ""
-
-    return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
-
-def get_character_id(character):
-    return {
-        "gru": "2033",
-    }.get(character, "unkn")
 
 
