@@ -73,7 +73,7 @@ def get_Character(intent):
 
     if "Characters" in intent["slots"]:
         character = intent["slots"]["Characters"]["value"]
-        characterId = (character.lower())
+        characterId = get_character_id(character.lower())
         if (characterId != "unkn"):
             card_title = "Character " + character.title()
             response = requests.get(API_BASE + characterId)

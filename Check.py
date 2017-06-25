@@ -11,7 +11,9 @@ def get_Character():
     characterId = get_character_id(character.lower())
     print "Got the character ID"
     response = requests.get(API_BASE + characterId)
-    jsonData = response.json()
+    #jsonData = response.json()
+    jsonData = json.loads(response)
+
     print "Got the response"
     alexaresponse = jsonData["sections"][0]["content"][0]["text"]
     print "Got the content"
